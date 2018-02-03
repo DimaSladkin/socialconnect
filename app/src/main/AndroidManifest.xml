@@ -27,9 +27,9 @@
         </activity>
         <service android:name=".DirtyService"
             android:exported="false">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="boy.yeahh.social_connect.DirtyService"/>
-            </intent-filter>
+            </intent-filter>-->
         </service>
         <receiver android:name=".BootBroadcast" android:enabled="true" android:exported="false">
             <intent-filter>

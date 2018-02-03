@@ -13,6 +13,8 @@ import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat*/
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+
 /*import android.util.Log
 import android.widget.TextView
 import butterknife.BindView
@@ -45,8 +47,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        startService(Intent("boy.yeahh.social_connect.DirtyService"))
+        //setContentView(R.layout.activity_main)
+        startService(Intent(this@MainActivity, DirtyService::class.java))
+        Toast.makeText(this@MainActivity, "Service started", Toast.LENGTH_LONG).show()
+        finish()
         /*ButterKnife.bind(this)
         rxBleClient = RxBleClient.create(this)
         checkPermission()
