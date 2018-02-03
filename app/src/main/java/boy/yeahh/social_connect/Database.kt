@@ -13,7 +13,6 @@ import rx.subjects.PublishSubject
  * Created by dima on 03.02.2018.
  */
 
-data class BeaconModel(var name: String, var description: String, var category: String)
 
 class Database {
 

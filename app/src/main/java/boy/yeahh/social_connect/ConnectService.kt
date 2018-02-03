@@ -88,26 +88,30 @@ class ConnectService : Service() {
                 .subscribe(
                         {
                             Log.i("onxCheck", "get beacon model")
-                            showNotification(it.name, it.description, it.category)
+                            showNotification(it)
                         },
                         {}
                 )
 
     }
 
-    private fun showNotification(title: String, description: String, category: String) {
+    private fun showNotification(beaconModel: BeaconModel) {
         val ii = Intent(applicationContext, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0)
+        ii.addCategory("2")
+        ii.putExtra(MainActivity.BEACON_ACTION, MainActivity.BEACON_ACTION)
+        ii.putParcelableArrayListExtra(MainActivity.BEACON_EXTRA, arrayListOf(beaconModel))
+        ii.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notificationBuilder = NotificationCompat.Builder(this, "notify-001")
-                .setContentTitle(title)
-                .setContentText(description)
+                .setContentTitle(beaconModel.name)
+                .setContentText(beaconModel.description)
                 .setContentIntent(pendingIntent)
                 .setSound(alarmSound)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(
-                        if (category == FILM_CATEGORY) R.drawable.ic_clapperboard
+                        if (beaconModel.category == FILM_CATEGORY) R.drawable.ic_clapperboard
                         else R.drawable.ic_shopping_bag
                 )
         mNotifyMgr?.notify(43443, notificationBuilder.build())
@@ -115,7 +119,6 @@ class ConnectService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        //ButterKnife.bind(this)
         rxBleClient = RxBleClient.create(this)
         initBleScan()
 
@@ -131,6 +134,12 @@ class ConnectService : Service() {
     private fun sendDistanceBroadcast(distance: String, extra: String) {
         val intent = Intent(MainActivity.DISTANCE_ACTION)
         intent.putExtra(extra, distance)
+        sendBroadcast(intent)
+    }
+
+    private fun sendBeaconModelBroadcast(beaconModel: BeaconModel) {
+        val intent = Intent(MainActivity.BEACON_ACTION)
+        intent.putParcelableArrayListExtra(MainActivity.BEACON_EXTRA, arrayListOf(beaconModel))
         sendBroadcast(intent)
     }
 }

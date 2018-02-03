@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         val DISTANCE_ACTION = "distance_action"
 
         val DISTANCE_SECOND_EXTRA = "distance_second_extra"
+
+        val BEACON_EXTRA = "beacon_extra"
+
+        val BEACON_ACTION = "beacon_action"
     }
 
 //    var rxBleClient: RxBleClient? = null
@@ -60,28 +65,40 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this@MainActivity, "Bluetooth disabled, service is offline", Toast.LENGTH_LONG).show()
         }
-//        rxBleClient = RxBleClient.create(this)
         checkPermission()
-        initReceiver()
-        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(broadcastReceiver, IntentFilter(DISTANCE_ACTION))
-//        initBleScan()
-//
-//        mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            mNotifyMgr?.createNotificationChannel(NotificationChannel("notify_001",
-//                    "Channel human readable title",
-//                    NotificationManager.IMPORTANCE_DEFAULT))
-//        }
+//        initReceiver()
+//        regReceiver()
+
+        if (intent.hasExtra(BEACON_ACTION)) {
+            val beaconModelList = intent.getParcelableArrayListExtra<BeaconModel>(BEACON_EXTRA)
+            Log.i("onxBeacon", beaconModelList[0].toString())
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(BEACON_ACTION)) {
+            val beaconModelList = intent.getParcelableArrayListExtra<BeaconModel>(BEACON_EXTRA)
+            Log.i("onxBeacon", beaconModelList.toString())
+        }
+    }
+
+    fun regReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DISTANCE_ACTION)
+        LocalBroadcastManager.getInstance(this@MainActivity)
+                .registerReceiver(broadcastReceiver, intentFilter)
     }
 
     fun initReceiver() {
         broadcastReceiver = object: BroadcastReceiver(){
             override fun onReceive(p0: Context?, p1: Intent?) {
-                val str = p1?.getStringExtra(DISTANCE_EXTRA)
-                val str2 = p1?.getStringExtra(DISTANCE_SECOND_EXTRA)
-                if (str != null) textFirst.text = str
-                if (str2 != null) textSec.text = str2
+                if (p1?.action == DISTANCE_ACTION) {
+                    val str = p1.getStringExtra(DISTANCE_EXTRA)
+                    val str2 = p1.getStringExtra(DISTANCE_SECOND_EXTRA)
+                    if (str != null) textFirst.text = str
+                    if (str2 != null) textSec.text = str2
+                }
             }
         }
     }
