@@ -1,6 +1,7 @@
 package boy.yeahh.social_connect
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -29,16 +30,20 @@ class Database {
             )
 
     fun getBeaconInfo(id: String): Single<BeaconModel> {
-        return beaconSubject.doOnSubscribe { getBeaconListener(id) }.take(1).toSingle()
+        return beaconSubject.doOnSubscribe {
+            Log.i("onxCheck", "subscribe")
+            getBeaconListener(id)
+        }.take(1).toSingle()
     }
 
     fun getBeaconListener(id: String) {
         dbReference.child("beacons").child(id).addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
-
+                Log.i("onxCheck", p0.toString())
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
+                Log.i("onxCheck", "found db")
                 beaconSubject.onNext(parseSnapshotToBeaconModel(p0!!))
             }
         })
