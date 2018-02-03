@@ -1,7 +1,7 @@
 package boy.yeahh.social_connect
 
 import android.Manifest
-import android.app.Activity
+import android.app.*
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
@@ -20,8 +20,10 @@ import com.polidea.rxandroidble.scan.ScanFilter
 import com.polidea.rxandroidble.scan.ScanResult
 import com.polidea.rxandroidble.scan.ScanSettings
 import rx.Subscription
-import android.app.NotificationManager
 import android.content.Context
+import android.media.RingtoneManager
+import android.os.Build
+import android.support.annotation.RequiresApi
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     var currentBeaconId: String? = null
 
+    var mNotifyMgr: NotificationManager? = null
+
     @BindView(R.id.text)
     lateinit var textView: TextView
 
@@ -48,6 +52,14 @@ class MainActivity : AppCompatActivity() {
         rxBleClient = RxBleClient.create(this)
         checkPermission()
         initBleScan()
+
+        mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mNotifyMgr?.createNotificationChannel(NotificationChannel("notify_001",
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT))
+        }
     }
 
 
@@ -72,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun outputDevice(scanResult: ScanResult) {
         textView.text = scanResult.bleDevice.name + scanResult.rssi + "  " + scanResult.bleDevice.macAddress
-        if (scanResult.rssi > -40) {
+        if (scanResult.rssi > -50) {
             Log.i("onxCheck", " > -40")
             if (currentBeaconId != scanResult.bleDevice.macAddress) {
                 Log.i("onxCheck", "found new")
@@ -120,14 +132,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showNotification(title: String, description: String, category: String) {
-        val notificationBuilder = NotificationCompat.Builder(this)
+        val ii = Intent(applicationContext, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0)
+        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+        val notificationBuilder = NotificationCompat.Builder(this, "notify-001")
                 .setContentTitle(title)
                 .setContentText(description)
+                .setContentIntent(pendingIntent)
+                .setSound(alarmSound)
+                .setPriority(Notification.PRIORITY_MAX)
                 .setSmallIcon(
                         if (category == FILM_CATEGORY) R.drawable.ic_clapperboard
                         else R.drawable.ic_shopping_bag
                 )
-        val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mNotifyMgr.notify(43443, notificationBuilder.build())
+        mNotifyMgr?.notify(43443, notificationBuilder.build())
     }
 }
