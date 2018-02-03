@@ -1,6 +1,7 @@
 package boy.yeahh.social_connect
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import android.widget.Toast
@@ -52,12 +54,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        startService(Intent(this@MainActivity, ConnectService::class.java))
-        Toast.makeText(this@MainActivity, "Service started", Toast.LENGTH_LONG).show()
+        if (BluetoothAdapter.getDefaultAdapter().isEnabled) {
+            startService(Intent(this@MainActivity, ConnectService::class.java))
+            Toast.makeText(this@MainActivity, "Service started", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this@MainActivity, "Bluetooth disabled, service is offline", Toast.LENGTH_LONG).show()
+        }
 //        rxBleClient = RxBleClient.create(this)
         checkPermission()
         initReceiver()
-        registerReceiver(broadcastReceiver, IntentFilter(DISTANCE_ACTION))
+        LocalBroadcastManager.getInstance(this@MainActivity).registerReceiver(broadcastReceiver, IntentFilter(DISTANCE_ACTION))
 //        initBleScan()
 //
 //        mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -78,6 +84,11 @@ class MainActivity : AppCompatActivity() {
                 if (str2 != null) textSec.text = str2
             }
         }
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this@MainActivity).unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
     }
 
 
