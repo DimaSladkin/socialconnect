@@ -20,7 +20,7 @@ import rx.Subscription
 /**
  * Created by Panda Eye on 03.02.2018.
  */
-class DirtyService: Service() {
+class ConnectService : Service() {
     companion object {
         val FILM_CATEGORY = "film"
 
@@ -53,8 +53,15 @@ class DirtyService: Service() {
                 ?.subscribe(
                         {
                             Log.i("onxScan", it.toString())
-                            if (it.bleDevice.name == "FIND-E")
+                            if (it.bleDevice.name == "FIND-E") {
                                 outputDevice(it)
+                                val extra =
+                                        if (it.bleDevice.macAddress == "65:B2:02:10:01:61")
+                                            MainActivity.DISTANCE_EXTRA
+                                        else
+                                            MainActivity.DISTANCE_SECOND_EXTRA
+                                sendDistanceBroadcast(it.rssi.toString(), extra)
+                            }
                         },
                         {
                             Log.i("onxScanErr", it.toString())
@@ -65,7 +72,7 @@ class DirtyService: Service() {
 
     private fun outputDevice(scanResult: ScanResult) {
         //textView.text = scanResult.bleDevice.name + scanResult.rssi + "  " + scanResult.bleDevice.macAddress
-        if (scanResult.rssi > -50) {
+        if (scanResult.rssi > -70) {
             Log.i("onxCheck", " > -40")
             if (currentBeaconId != scanResult.bleDevice.macAddress) {
                 Log.i("onxCheck", "found new")
@@ -119,5 +126,11 @@ class DirtyService: Service() {
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT))
         }
+    }
+
+    private fun sendDistanceBroadcast(distance: String, extra: String) {
+        val intent = Intent(MainActivity.DISTANCE_ACTION)
+        intent.putExtra(extra, distance)
+        sendBroadcast(intent)
     }
 }

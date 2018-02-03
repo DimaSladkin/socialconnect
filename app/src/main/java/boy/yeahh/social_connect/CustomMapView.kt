@@ -2,7 +2,6 @@ package boy.yeahh.social_connect
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.support.constraint.ConstraintLayout
@@ -14,8 +13,8 @@ import kotlin.math.roundToInt
 /**
  * Created by Vova Lantsov on 03.02.2018.
  */
-class SexyMapView(context: Context): ConstraintLayout(context) {
-    private val imageView: ImageView = findViewById(R.id.sexy_image)
+class CustomMapView(context: Context): ConstraintLayout(context) {
+    private val imageView: ImageView = findViewById(R.id.map_image)
     val points = ArrayList<Point>()
 
     fun image(resourceId: Int) = imageView.setBackgroundResource(resourceId)

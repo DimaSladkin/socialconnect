@@ -25,10 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".DirtyService"
+        <service android:name=".ConnectService"
             android:exported="false">
             <!--<intent-filter>
-                <action android:name="boy.yeahh.social_connect.DirtyService"/>
+                <action android:naboy.yeahh.social_connect.ConnectServicecevice"/>
             </intent-filter>-->
         </service>
         <receiver android:name=".BootBroadcast" android:enabled="true" android:exported="false">
