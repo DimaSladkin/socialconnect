@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "836397598770",
+    "firebase_url": "https://int20h-c53ff.firebaseio.com",
+    "project_id": "int20h-c53ff",
+    "storage_bucket": "int20h-c53ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836397598770:android:be37e8c01966e622",
+        "android_client_info": {
+          "package_name": "boy.yeahh.social_connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836397598770-n9usbe2fqpe4i790m9vmvftb7tribad0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7E6QBGsGzHcVS6XUlcD5VwsOy771Sv_k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
