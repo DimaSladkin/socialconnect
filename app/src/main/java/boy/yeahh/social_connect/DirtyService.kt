@@ -1,30 +1,26 @@
 package boy.yeahh.social_connect
 
-import android.Manifest
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import android.os.IBinder
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.polidea.rxandroidble.RxBleClient
 import com.polidea.rxandroidble.scan.ScanFilter
 import com.polidea.rxandroidble.scan.ScanResult
 import com.polidea.rxandroidble.scan.ScanSettings
 import rx.Subscription
 
-
-class MainActivity : AppCompatActivity() {
-
+/**
+ * Created by Panda Eye on 03.02.2018.
+ */
+class DirtyService: Service() {
     companion object {
         val FILM_CATEGORY = "film"
 
@@ -39,26 +35,9 @@ class MainActivity : AppCompatActivity() {
 
     var mNotifyMgr: NotificationManager? = null
 
-    @BindView(R.id.text)
-    lateinit var textView: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
-        rxBleClient = RxBleClient.create(this)
-        checkPermission()
-        initBleScan()
-
-        mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mNotifyMgr?.createNotificationChannel(NotificationChannel("notify_001",
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT))
-        }
+    override fun onBind(p0: Intent?): IBinder? {
+        return null
     }
-
 
     private fun initBleScan() {
         deviceSubscription?.unsubscribe()
@@ -81,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun outputDevice(scanResult: ScanResult) {
-        textView.text = scanResult.bleDevice.name + scanResult.rssi + "  " + scanResult.bleDevice.macAddress
+        //textView.text = scanResult.bleDevice.name + scanResult.rssi + "  " + scanResult.bleDevice.macAddress
         if (scanResult.rssi > -50) {
             Log.i("onxCheck", " > -40")
             if (currentBeaconId != scanResult.bleDevice.macAddress) {
@@ -91,30 +70,6 @@ class MainActivity : AppCompatActivity() {
             currentBeaconId = scanResult.bleDevice.macAddress
         }
 
-    }
-
-    private fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                        1)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            initBleScan()
-        }
     }
 
     private fun triggerBeaconInfo(beaconId: String) {
@@ -139,11 +94,26 @@ class MainActivity : AppCompatActivity() {
                 .setContentText(description)
                 .setContentIntent(pendingIntent)
                 .setSound(alarmSound)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(
-                        if (category == FILM_CATEGORY) R.drawable.ic_clapperboard
+                        if (category == MainActivity.FILM_CATEGORY) R.drawable.ic_clapperboard
                         else R.drawable.ic_shopping_bag
                 )
         mNotifyMgr?.notify(43443, notificationBuilder.build())
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        //ButterKnife.bind(this)
+        rxBleClient = RxBleClient.create(this)
+        initBleScan()
+
+        mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mNotifyMgr?.createNotificationChannel(NotificationChannel("notify_001",
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT))
+        }
     }
 }
