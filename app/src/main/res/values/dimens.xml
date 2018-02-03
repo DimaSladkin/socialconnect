@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="shop_info_text_view_left_padding">12dp</dimen>
+    <dimen name="bottom_top_margin">8dp</dimen>
+</resources>

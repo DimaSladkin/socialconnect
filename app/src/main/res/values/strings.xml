@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">social-connect</string>
+
+    <string name="one_hundred_metres">100 m</string>
+    <string name="pull_and_bear_text">Pull and Bear</string>
+    <string name="clothes_text">Clothes</string>
+
+    <string name="deals_text">Deals</string>
+    <string name="save_up_text">Save up to 40% today!</string>
 </resources>
