@@ -1,18 +1,18 @@
 package boy.yeahh.social_connect
 
-import android.Manifest
+/*import android.Manifest
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
-import android.os.Build
+import android.os.Build*/
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+/*import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat*/
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
+/*import android.util.Log
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -20,12 +20,12 @@ import com.polidea.rxandroidble.RxBleClient
 import com.polidea.rxandroidble.scan.ScanFilter
 import com.polidea.rxandroidble.scan.ScanResult
 import com.polidea.rxandroidble.scan.ScanSettings
-import rx.Subscription
+import rx.Subscription*/
 
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
+    /*companion object {
         val FILM_CATEGORY = "film"
 
         val BAG_CATEGORY = "bag"
@@ -40,12 +40,12 @@ class MainActivity : AppCompatActivity() {
     var mNotifyMgr: NotificationManager? = null
 
     @BindView(R.id.text)
-    lateinit var textView: TextView
+    lateinit var textView: TextView*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
+        /*ButterKnife.bind(this)
         rxBleClient = RxBleClient.create(this)
         checkPermission()
         initBleScan()
@@ -56,11 +56,11 @@ class MainActivity : AppCompatActivity() {
             mNotifyMgr?.createNotificationChannel(NotificationChannel("notify_001",
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT))
-        }
+        }*/
     }
 
 
-    private fun initBleScan() {
+    /*private fun initBleScan() {
         deviceSubscription?.unsubscribe()
         deviceSubscription = rxBleClient?.scanBleDevices(ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -145,5 +145,5 @@ class MainActivity : AppCompatActivity() {
                         else R.drawable.ic_shopping_bag
                 )
         mNotifyMgr?.notify(43443, notificationBuilder.build())
-    }
+    }*/
 }

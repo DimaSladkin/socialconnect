@@ -39,6 +39,10 @@ class DirtyService: Service() {
         return null
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
     private fun initBleScan() {
         deviceSubscription?.unsubscribe()
         deviceSubscription = rxBleClient?.scanBleDevices(ScanSettings.Builder()
@@ -96,7 +100,7 @@ class DirtyService: Service() {
                 .setSound(alarmSound)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(
-                        if (category == MainActivity.FILM_CATEGORY) R.drawable.ic_clapperboard
+                        if (category == FILM_CATEGORY) R.drawable.ic_clapperboard
                         else R.drawable.ic_shopping_bag
                 )
         mNotifyMgr?.notify(43443, notificationBuilder.build())
