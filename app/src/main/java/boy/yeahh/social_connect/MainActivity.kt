@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build*/
+import android.content.Intent
 import android.os.Bundle
 /*import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationCompat
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        startService(Intent("boy.yeahh.social_connect.DirtyService"))
         /*ButterKnife.bind(this)
         rxBleClient = RxBleClient.create(this)
         checkPermission()
