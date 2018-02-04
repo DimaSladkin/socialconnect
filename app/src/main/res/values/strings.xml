@@ -7,4 +7,9 @@
 
     <string name="deals_text">Deals</string>
     <string name="save_up_text">Save up to 40% today!</string>
+
+    <string name="custom_title_bar_title">Symphony\'s GHealth Demo</string>
+
+    <string name="service_started">Service started</string>
+    <string name="service_disabled">Bluetooth disabled, service is offline</string>
 </resources>

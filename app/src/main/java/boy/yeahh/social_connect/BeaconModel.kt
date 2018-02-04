@@ -10,8 +10,7 @@ class BeaconModel(var name: String, var description: String, var category: Strin
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
-            parcel.readString()) {
-    }
+            parcel.readString())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
@@ -19,17 +18,10 @@ class BeaconModel(var name: String, var description: String, var category: Strin
         parcel.writeString(category)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<BeaconModel> {
-        override fun createFromParcel(parcel: Parcel): BeaconModel {
-            return BeaconModel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<BeaconModel?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = BeaconModel(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<BeaconModel?>(size)
     }
 }

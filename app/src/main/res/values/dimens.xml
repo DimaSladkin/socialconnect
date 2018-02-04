@@ -2,4 +2,5 @@
 <resources>
     <dimen name="shop_info_text_view_left_padding">12dp</dimen>
     <dimen name="bottom_top_margin">4dp</dimen>
+    <dimen name="title_bar_left_padding">4dp</dimen>
 </resources>

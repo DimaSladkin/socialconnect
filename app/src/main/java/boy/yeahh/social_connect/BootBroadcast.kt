@@ -9,8 +9,7 @@ import android.content.Intent
  */
 class BootBroadcast:BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
-        if (p1?.action == "android.intent.action.BOOT_COMPLETED") {
+        if (p1?.action == "android.intent.action.BOOT_COMPLETED")
             p0?.startService(Intent(p0, ConnectService::class.java))
-        }
     }
 }

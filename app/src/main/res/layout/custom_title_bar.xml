@@ -1,32 +1,37 @@
-<RelativeLayout xmlns:android=
-    "http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="40dp"
-    android:orientation="horizontal" android:paddingLeft="5dp"
-    >
+    android:orientation="horizontal" android:paddingStart="5dp"
+    android:paddingEnd="0dp">
 
     <TextView android:id="@+id/title" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Symphony's GHealth Demo"
-        />
+        android:text="@string/custom_title_bar_title"/>
     <View android:id="@+id/View01" android:layout_width="1dp"
         android:layout_height="500dip"
-        android:background="#2B497B"  android:layout_toLeftOf="@+id/facebookBtn">
+        android:background="#2B497B"  android:layout_toStartOf="@+id/facebookBtn">
     </View>
     <!-- Facebook button -->
     <ImageView android:src="@drawable/left_arrow"
-        android:layout_toLeftOf="@+id/twitterBtn" android:layout_width="28dp"
+        android:layout_toStartOf="@+id/twitterBtn" android:layout_width="28dp"
         android:layout_height="28dp" android:id="@id/facebookBtn"
-        android:clickable="true" />
+        android:clickable="true"
+        android:focusable="false"
+        android:contentDescription="@string/app_name"/>
     <!-- Twitter button -->
     <ImageView
         android:clickable="true"
+        android:focusable="false"
         android:layout_width="28dp" android:layout_height="28dp" android:id="@id/twitterBtn"
         android:layout_marginLeft="3dp" android:layout_marginRight="3dp"
-        android:layout_toLeftOf="@+id/linkedinBtn" />
+        android:layout_toStartOf="@+id/linkedinBtn"
+        android:contentDescription="@string/app_name"/>
     <!-- Linkedin button -->
     <ImageView
         android:layout_width="28dp"
-        android:layout_height="28dp" android:clickable="true"
-        android:layout_alignParentRight="true"
-        android:id="@id/linkedinBtn" />
+        android:layout_height="28dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:layout_alignParentEnd="true"
+        android:id="@id/linkedinBtn"
+        android:contentDescription="@string/app_name"/>
 </RelativeLayout>

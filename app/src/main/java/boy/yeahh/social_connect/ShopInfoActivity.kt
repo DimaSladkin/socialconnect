@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
-import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
 
@@ -14,10 +13,10 @@ import butterknife.ButterKnife
 class ShopInfoActivity: AppCompatActivity() {
 
     @BindView(R.id.shop_name_tv)
-    lateinit var shopNameTv: AppCompatTextView
+    private lateinit var shopNameTv: AppCompatTextView
 
     @BindView(R.id.shop_cat_tv)
-    lateinit var shopCatTv: AppCompatTextView
+    private lateinit var shopCatTv: AppCompatTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

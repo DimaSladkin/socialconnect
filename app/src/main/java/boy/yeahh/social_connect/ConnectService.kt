@@ -22,26 +22,20 @@ import rx.Subscription
  */
 class ConnectService : Service() {
     companion object {
-        val FILM_CATEGORY = "Cinema"
-
-        val BAG_CATEGORY = "bag"
+        const val FILM_CATEGORY = "Cinema"
     }
 
-    var rxBleClient: RxBleClient? = null
+    private var rxBleClient: RxBleClient? = null
 
-    var deviceSubscription: Subscription? = null
+    private var deviceSubscription: Subscription? = null
 
-    var currentBeaconId: String? = null
+    private var currentBeaconId: String? = null
 
-    var mNotifyMgr: NotificationManager? = null
+    private var mNotifyMgr: NotificationManager? = null
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(p0: Intent?): IBinder? = null
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_STICKY
-    }
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
     private fun initBleScan() {
         deviceSubscription?.unsubscribe()
@@ -65,7 +59,6 @@ class ConnectService : Service() {
     }
 
     private fun outputDevice(scanResult: ScanResult) {
-        //textView.text = scanResult.bleDevice.name + scanResult.rssi + "  " + scanResult.bleDevice.macAddress
         if (scanResult.rssi > -70) {
             Log.i("onxCheck", " > -40")
             if (currentBeaconId != scanResult.bleDevice.macAddress) {
@@ -135,12 +128,6 @@ class ConnectService : Service() {
         Log.i("onxService", "send")
         val intent = Intent(MainActivity.DISTANCE_ACTION)
         intent.putExtra(extra, distance)
-        sendBroadcast(intent)
-    }
-
-    private fun sendBeaconModelBroadcast(beaconModel: BeaconModel) {
-        val intent = Intent(MainActivity.BEACON_ACTION)
-        intent.putParcelableArrayListExtra(MainActivity.BEACON_EXTRA, arrayListOf(beaconModel))
         sendBroadcast(intent)
     }
 }
