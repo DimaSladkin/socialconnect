@@ -1,6 +1,7 @@
 package boy.yeahh.social_connect
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -15,6 +16,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
@@ -47,60 +49,34 @@ class MainActivity : AppCompatActivity() {
 //
 //    var mNotifyMgr: NotificationManager? = null
 
-    @BindView(R.id.text1_dist)
-    lateinit var textFirst: TextView
+//    @BindView(R.id.text1_dist)
+//    lateinit var textFirst: TextView
+//
+//    @BindView(R.id.text2_dist)
+//    lateinit var textSec: TextView
 
-    @BindView(R.id.text2_dist)
-    lateinit var textSec: TextView
+    @BindView(R.id.main_img)
+    lateinit var mainImage: ImageView
 
-    var broadcastReceiver: BroadcastReceiver? = null
+    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            Log.i("onxService", "receive")
+            val str = p1?.getStringExtra(DISTANCE_EXTRA)
+            val str2 = p1?.getStringExtra(DISTANCE_SECOND_EXTRA)
+            if (str != null) mainImage.setImageResource(R.drawable.banneren)
+            if (str2 != null) mainImage.setImageResource(R.drawable.pull_and_bear_shop)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        if (BluetoothAdapter.getDefaultAdapter().isEnabled) {
-            startService(Intent(this@MainActivity, ConnectService::class.java))
-            Toast.makeText(this@MainActivity, "Service started", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this@MainActivity, "Bluetooth disabled, service is offline", Toast.LENGTH_LONG).show()
-        }
         checkPermission()
-//        initReceiver()
-//        regReceiver()
 
-        if (intent.hasExtra(BEACON_ACTION)) {
-            val beaconModelList = intent.getParcelableArrayListExtra<BeaconModel>(BEACON_EXTRA)
-            Log.i("onxBeacon", beaconModelList[0].toString())
-        }
-    }
+        registerReceiver(broadcastReceiver, IntentFilter(DISTANCE_ACTION))
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent!!.hasExtra(BEACON_ACTION)) {
-            val beaconModelList = intent.getParcelableArrayListExtra<BeaconModel>(BEACON_EXTRA)
-            Log.i("onxBeacon", beaconModelList.toString())
-        }
-    }
-
-    fun regReceiver() {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DISTANCE_ACTION)
-        LocalBroadcastManager.getInstance(this@MainActivity)
-                .registerReceiver(broadcastReceiver, intentFilter)
-    }
-
-    fun initReceiver() {
-        broadcastReceiver = object: BroadcastReceiver(){
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                if (p1?.action == DISTANCE_ACTION) {
-                    val str = p1.getStringExtra(DISTANCE_EXTRA)
-                    val str2 = p1.getStringExtra(DISTANCE_SECOND_EXTRA)
-                    if (str != null) textFirst.text = str
-                    if (str2 != null) textSec.text = str2
-                }
-            }
-        }
+        runService()
     }
 
     override fun onDestroy() {
@@ -142,14 +118,23 @@ class MainActivity : AppCompatActivity() {
 //
 //    }
 
+    private fun runService() {
+        if (BluetoothAdapter.getDefaultAdapter().isEnabled) {
+            startService(Intent(this@MainActivity, ConnectService::class.java))
+            Toast.makeText(this@MainActivity, "Service started", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this@MainActivity, "Bluetooth disabled, service is offline", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
+            runService()
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
+                runService()
             } else {
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
@@ -158,13 +143,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-//            initBleScan()
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            runService()
+        }
+    }
 //
 //    private fun triggerBeaconInfo(beaconId: String) {
 //        Database().getBeaconInfo(beaconId)

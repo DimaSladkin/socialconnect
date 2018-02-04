@@ -22,7 +22,7 @@ import rx.Subscription
  */
 class ConnectService : Service() {
     companion object {
-        val FILM_CATEGORY = "film"
+        val FILM_CATEGORY = "Cinema"
 
         val BAG_CATEGORY = "bag"
     }
@@ -49,18 +49,12 @@ class ConnectService : Service() {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                 .build(), ScanFilter.Builder().build())
-                ?.doOnSubscribe { Log.d("onXscan", "lol") }
+                ?.doOnSubscribe { Log.d("onxScan", "lol") }
                 ?.subscribe(
                         {
                             Log.i("onxScan", it.toString())
                             if (it.bleDevice.name == "FIND-E") {
                                 outputDevice(it)
-                                val extra =
-                                        if (it.bleDevice.macAddress == "65:B2:02:10:01:61")
-                                            MainActivity.DISTANCE_EXTRA
-                                        else
-                                            MainActivity.DISTANCE_SECOND_EXTRA
-                                sendDistanceBroadcast(it.rssi.toString(), extra)
                             }
                         },
                         {
@@ -77,6 +71,12 @@ class ConnectService : Service() {
             if (currentBeaconId != scanResult.bleDevice.macAddress) {
                 Log.i("onxCheck", "found new")
                 triggerBeaconInfo(scanResult.bleDevice.macAddress)
+                val extra =
+                        if (scanResult.bleDevice.macAddress == "65:B2:02:10:01:61")
+                            MainActivity.DISTANCE_EXTRA
+                        else
+                            MainActivity.DISTANCE_SECOND_EXTRA
+                sendDistanceBroadcast(scanResult.rssi.toString(), extra)
             }
             currentBeaconId = scanResult.bleDevice.macAddress
         }
@@ -96,7 +96,7 @@ class ConnectService : Service() {
     }
 
     private fun showNotification(beaconModel: BeaconModel) {
-        val ii = Intent(applicationContext, MainActivity::class.java)
+        val ii = Intent(applicationContext, ShopInfoActivity::class.java)
         ii.addCategory("2")
         ii.putExtra(MainActivity.BEACON_ACTION, MainActivity.BEACON_ACTION)
         ii.putParcelableArrayListExtra(MainActivity.BEACON_EXTRA, arrayListOf(beaconModel))
@@ -132,6 +132,7 @@ class ConnectService : Service() {
     }
 
     private fun sendDistanceBroadcast(distance: String, extra: String) {
+        Log.i("onxService", "send")
         val intent = Intent(MainActivity.DISTANCE_ACTION)
         intent.putExtra(extra, distance)
         sendBroadcast(intent)
