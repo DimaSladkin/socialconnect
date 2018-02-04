@@ -13,10 +13,10 @@ import butterknife.ButterKnife
 class ShopInfoActivity: AppCompatActivity() {
 
     @BindView(R.id.shop_name_tv)
-    private lateinit var shopNameTv: AppCompatTextView
+    lateinit var shopNameTv: AppCompatTextView
 
     @BindView(R.id.shop_cat_tv)
-    private lateinit var shopCatTv: AppCompatTextView
+    lateinit var shopCatTv: AppCompatTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
